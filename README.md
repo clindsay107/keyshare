@@ -7,7 +7,7 @@ No longer do you need to store secret keys and tokens in a YAML file to be passe
 encrypts and stores your credentials on Amazon S3, then automatically fetches and injects them into your application. This means
 that the only credentials you need to pass around are your Amazon AWS credentials and your keyshare master password.
 
-Keyshare also includes a set of command-line interface tools called `gatekeeper`. This gives basic functionality for
+Keyshare also includes a command-line toolchain called `gatekeeper`. This gives basic functionality for
 adding/removing/retrieving credentials stored on S3.
 
 ## Requirements
@@ -45,7 +45,7 @@ TODO: Write testing instructions here
 
 Gatekeeper has it's own suite of tests that can be run from the root `keyshare` directory with the following rake task:
 `rake test_gatekeeper`. Note that Gatekeeper requires valid AWS credentials to be supplied in your `env.yml` file. The tests
-will *not* alter any production data and instead creates a new, randomly named test vault which is torn down after testing completes. 
+will *not* alter any production data and instead creates a new, randomly named test vault which is torn down after testing completes.
 
 ## Development
 

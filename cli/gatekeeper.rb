@@ -8,7 +8,7 @@ class Gatekeeper < Thor
   desc "add KEY CREDENTIAL", "Add a credential under a specified key to the vault"
   option :overwrite, :type => :boolean
   def add(key, credential)
-    begin
+    # begin
       if key_exists?(key)
         unless options[:overwrite]
           puts "WARNING: Value already exists in vault for key '#{key}'. To overwrite"\
@@ -18,11 +18,11 @@ class Gatekeeper < Thor
       end
       response = build_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
       puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
-    rescue Aws::S3::Errors::NoSuchBucket
-      puts "ERROR: S3 bucket '#{ENV['VAULT_BUCKET_NAME']}' does not exist on this account/region!"\
-      " Either you have misconfigured your AWS settings, or you have not created a"\
-      " root-level '#{ENV['VAULT_BUCKET_NAME']}' bucket in S3. You can do so now with the #create_vault command."
-    end
+    # rescue Aws::S3::Errors::NoSuchBucket
+    #   puts "ERROR: S3 bucket '#{ENV['VAULT_BUCKET_NAME']}' does not exist on this account/region!"\
+    #   " Either you have misconfigured your AWS settings, or you have not created a"\
+    #   " root-level '#{ENV['VAULT_BUCKET_NAME']}' bucket in S3. You can do so now with the #create_vault command."
+    # end
   end
 
   desc "get KEY BUCKET_NAME", "Retrieve a credential under a specified key from the vault"
