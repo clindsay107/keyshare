@@ -13,7 +13,7 @@ adding/removing/retrieving credentials stored on S3.
 ## Requirements
 
 - An AWS account (free tier is more than adequate). Keyshare uses S3 buckets as keyrings to store your encrypted data. You will also
-need your AWS access key ID and secret access key [which can be obtained from the (AWS Security Credentials tab)](https://console.aws.amazon.com/iam/home?#security_credential)
+need your AWS access key ID and secret access key which can be obtained from the [AWS Security Credentials tab](https://console.aws.amazon.com/iam/home?#security_credential)
 
 ## Installation
 
