@@ -43,7 +43,7 @@ describe "Gatekeeper" do
   it "should be able to add a key to an existing vault" do
     command = "add #{TEST_KEY_1} #{TEST_CRED_1}"
     output = get_output(command)
-    output.must_match /^INFO: Successfully added/
+    output.must_match /^INFO: Successfully encrypted and added credential/
   end
 
   it "should get an error when attempting to add an existing key" do
@@ -55,7 +55,7 @@ describe "Gatekeeper" do
   it "should be able to add an existing key with --overwrite flag" do
     command = "add #{TEST_KEY_1} #{TEST_CRED_1} --overwrite"
     output = get_output(command)
-    output.must_match /^INFO: Successfully added/
+    output.must_match /^INFO: Successfully encrypted and added credential/
   end
 
   # Retrieving a key from the vault
