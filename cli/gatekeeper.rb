@@ -8,21 +8,15 @@ class Gatekeeper < Thor
   desc "add KEY CREDENTIAL", "Add a credential under a specified key to the vault"
   option :overwrite, :type => :boolean
   def add(key, credential)
-    # begin
-      if key_exists?(key)
-        unless options[:overwrite]
-          puts "WARNING: Value already exists in vault for key '#{key}'. To overwrite"\
-          " the value with a new one, call this method again with the '--overwrite' flag enabled."
-          return
-        end
+    if key_exists?(key)
+      unless options[:overwrite]
+        puts "WARNING: Value already exists in vault for key '#{key}'. To overwrite"\
+        " the value with a new one, call this method again with the '--overwrite' flag enabled."
+        return
       end
-      response = build_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
-      puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
-    # rescue Aws::S3::Errors::NoSuchBucket
-    #   puts "ERROR: S3 bucket '#{ENV['VAULT_BUCKET_NAME']}' does not exist on this account/region!"\
-    #   " Either you have misconfigured your AWS settings, or you have not created a"\
-    #   " root-level '#{ENV['VAULT_BUCKET_NAME']}' bucket in S3. You can do so now with the #create_vault command."
-    # end
+    end
+    response = build_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
+    puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
   end
 
   desc "get KEY BUCKET_NAME", "Retrieve a credential under a specified key from the vault"
@@ -31,9 +25,9 @@ class Gatekeeper < Thor
     begin
       response = build_client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
       if options[:decrypt]
-        puts "Retrieved and decrypted value:\n\n\t#{response}\n\n"
+        puts "INFO: Retrieved and decrypted value:\n\n\t#{response}\n\n"
       else
-        puts "Retrieved (encrypted) value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
+        puts "INFO: Retrieved (encrypted) value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
         " You can call this method again with the '--decrypt \"YOUR KEY\"' to view the decrypted value."
       end
     rescue Aws::S3::Errors::NoSuchKey
