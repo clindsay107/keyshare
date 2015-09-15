@@ -5,7 +5,7 @@ Envyable.load('../config/env.yml', 'production')
 
 class Gatekeeper < Thor
 
-  desc "add KEY CREDENTIAL", "Add a credential under a specified key to the vault"
+  desc "add KEY CREDENTIAL", "Encrypt and a credential under a specified key to the vault"
   option :overwrite, :type => :boolean
   def add(key, credential)
     if key_exists?(key)
@@ -16,7 +16,7 @@ class Gatekeeper < Thor
       end
     end
 
-    response = build_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
+    response = client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
     if response.successful?
       puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
     else
@@ -27,7 +27,7 @@ class Gatekeeper < Thor
   desc "get KEY BUCKET_NAME", "Retrieve a credential under a specified key from the vault"
   option :decrypt, :type => :string
   def get(key)
-    response = build_client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
+    response = client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
     if options[:decrypt]
       puts "INFO: Retrieved and decrypted value:\n\n\t#{response}\n\n"
     else
@@ -38,7 +38,7 @@ class Gatekeeper < Thor
 
   desc "create_vault", "Create a '#{ENV['VAULT_BUCKET_NAME']}' bucket on S3 with default configuration which acts as your keyring"
   def create_vault
-    resp = build_client.create_bucket({
+    resp = client.create_bucket({
         bucket: ENV['VAULT_BUCKET_NAME'],
         create_bucket_configuration: { location_constraint: ENV['AWS_REGION'] }
       })
@@ -52,14 +52,14 @@ class Gatekeeper < Thor
   # Helper method to check if a key exists
   def key_exists?(bucket_name = ENV['VAULT_BUCKET_NAME'], key)
     begin
-      return build_client.head_object({ bucket: ENV['VAULT_BUCKET_NAME'], key: key }).successful?
+      return client.head_object({ bucket: ENV['VAULT_BUCKET_NAME'], key: key }).successful?
     rescue Aws::S3::Errors::NotFound
       return false
     end
   end
 
   # Build a new AWS S3 client using supplied credentials in env.yml
-  def build_client
+  def client
     credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
     Aws::S3::Client.new(region: ENV['AWS_REGION'], credentials: credentials)
   end
