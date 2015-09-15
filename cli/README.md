@@ -13,6 +13,5 @@ specs from the top level `keyshare` directory with `rake test_gatekeeper`.
 
 ## AWS Errors
 
-Gatekeeper (and Keyshare) leverage the `aws-sdk` gem for S3 interaction. All errors from the `aws-sdk` gem inherit from the parent [`Aws::Errors::ServiceError`](http://docs.aws.amazon.com/sdkforruby/api/Aws/Errors/ServiceError.html).
-Most errors that get raised have a self-explanatory name, but in the event that you find an error that you don't understand,
-this page should be able to explain it.
+Gatekeeper (and Keyshare) leverage the `aws-sdk` gem for S3 interaction. All errors from the `aws-sdk` gem inherit from the parent `Aws::Errors::ServiceError`. An explanation of all AWS error codes can be [found on this page](http://docs.aws.amazon.com/sdkforruby/api/Aws/Errors/ServiceError.html).
+Most errors that get raised have a self-explanatory name, but in the event that you find an error that you don't understand, this page should be able to explain it.
