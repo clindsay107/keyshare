@@ -28,11 +28,12 @@ describe "Gatekeeper" do
   # Creating a vault
 
   it "should raise an error when a command is called without an existing vault" do
-    assert_raises(Aws::S3::Errors::NoSuchBucket) { Gatekeeper.new.add(TEST_KEY_1, TEST_CRED_1) }
+    command = "add #{TEST_KEY_1} #{TEST_CRED_1}".split
+    assert_raises(Aws::S3::Errors::NoSuchBucket) { Gatekeeper.start(command) }
   end
 
   it "should be able to create a new vault" do
-    command = ["create_vault"]
+    command = "create_vault"
     output = get_output(command)
     output.must_match /^INFO: Successfully created S3 bucket '#{ENV['VAULT_BUCKET_NAME']}/
   end
@@ -40,27 +41,32 @@ describe "Gatekeeper" do
   # Adding keys to a vault
 
   it "should be able to add a key to an existing vault" do
-    command = command = ["add", TEST_KEY_1, TEST_CRED_1]
+    command = "add #{TEST_KEY_1} #{TEST_CRED_1}"
     output = get_output(command)
     output.must_match /^INFO: Successfully added/
   end
 
   it "should get an error when attempting to add an existing key" do
-    command = ["add", TEST_KEY_1, TEST_CRED_1]
+    command = "add #{TEST_KEY_1} #{TEST_CRED_1}"
     output = get_output(command)
     output.must_match /^WARNING: Value already exists in vault/
   end
 
   it "should be able to add an existing key with --overwrite flag" do
-    command = ["add", TEST_KEY_1, TEST_CRED_1, "--overwrite"]
+    command = "add #{TEST_KEY_1} #{TEST_CRED_1} --overwrite"
     output = get_output(command)
     output.must_match /^INFO: Successfully added/
   end
 
   # Retrieving a key from the vault
 
+  it "should raise an error when retrieving a key that doesn't exist" do
+    command = "get key-that-doesnt-exist".split
+    assert_raises(Aws::S3::Errors::NoSuchKey) { Gatekeeper.start(command) }
+  end
+
   it "should be able to get an existing key" do
-    command = ["get", TEST_KEY_1]
+    command = "get #{TEST_KEY_1}"
     output = get_output(command)
     output.must_match /^INFO: Retrieved \(encrypted\) value/
   end
@@ -69,7 +75,8 @@ describe "Gatekeeper" do
 
   # Helper method to capture the output from an array of command line args
   def get_output(command)
-    capture_io { Gatekeeper.start(command) }.join("")
+    command = command.split
+    capture_io { Gatekeeper.start(command) }.join
   end
 
 end

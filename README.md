@@ -43,9 +43,7 @@ TODO: Write testing instructions here
 
 ### Gatekeeper
 
-Gatekeeper has it's own suite of tests that can be run from the root `keyshare` directory with the following rake task:
-`rake test_gatekeeper`. Note that Gatekeeper requires valid AWS credentials to be supplied in your `env.yml` file. The tests
-will *not* alter any production data and instead creates a new, randomly named test vault which is torn down after testing completes.
+See the (Gatekeeper docs here)[cli/gatekeeper.md] for more info on testing.
 
 ## Development
 

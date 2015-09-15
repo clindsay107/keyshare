@@ -15,47 +15,36 @@ class Gatekeeper < Thor
         return
       end
     end
+
     response = build_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
-    puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
+    if response.successful?
+      puts "INFO: Successfully added '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
+    else
+      puts response.error
+    end
   end
 
   desc "get KEY BUCKET_NAME", "Retrieve a credential under a specified key from the vault"
   option :decrypt, :type => :string
   def get(key)
-    begin
-      response = build_client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
-      if options[:decrypt]
-        puts "INFO: Retrieved and decrypted value:\n\n\t#{response}\n\n"
-      else
-        puts "INFO: Retrieved (encrypted) value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
-        " You can call this method again with the '--decrypt \"YOUR KEY\"' to view the decrypted value."
-      end
-    rescue Aws::S3::Errors::NoSuchKey
-      puts "ERROR: Able to connect to S3, but specified key '#{key}' does not exist in S3 bucket '#{ENV['VAULT_BUCKET_NAME']}'."\
-      " You can add one using the #add method."
-    rescue Aws::S3::Errors::NotFound
-      puts "ERROR: S3 bucket '#{ENV['VAULT_BUCKET_NAME']}' does not exist on this account/region!"\
-      " Either you have misconfigured your AWS settings, or you have not created a"\
-      " root-level '#{ENV['VAULT_BUCKET_NAME']}' bucket in S3. You can do so now with the #create_vault command."
+    response = build_client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
+    if options[:decrypt]
+      puts "INFO: Retrieved and decrypted value:\n\n\t#{response}\n\n"
+    else
+      puts "INFO: Retrieved (encrypted) value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
+      " You can call this method again with the '--decrypt \"YOUR KEY\"' to view the decrypted value."
     end
   end
 
   desc "create_vault", "Create a '#{ENV['VAULT_BUCKET_NAME']}' bucket on S3 with default configuration which acts as your keyring"
   def create_vault
-    begin
-      resp = build_client.create_bucket({
-          bucket: ENV['VAULT_BUCKET_NAME'],
-          create_bucket_configuration: { location_constraint: ENV['AWS_REGION'] }
-        })
+    resp = build_client.create_bucket({
+        bucket: ENV['VAULT_BUCKET_NAME'],
+        create_bucket_configuration: { location_constraint: ENV['AWS_REGION'] }
+      })
 
-        puts "INFO: Successfully created S3 bucket '#{ENV['VAULT_BUCKET_NAME']}'! You can"\
-        " now add a key-value credential pair using the #add command."
-    rescue Aws::S3::Errors::BucketAlreadyOwnedByYou
-      puts "WARNING: Bucket '#{ENV['VAULT_BUCKET_NAME']}' already exists for this account in"\
-      " the specified region (#{ENV['AWS_REGION']}). Nothing has been changed or created."\
-      " You can use the #add command to place a key-value pair into the vault, or use"\
-      " #get to retrieve a value by its key."
-    end
+      puts "INFO: Successfully created S3 bucket '#{ENV['VAULT_BUCKET_NAME']}'! You can"\
+      " now add a key-value credential pair using the #add command."
   end
 
   private
