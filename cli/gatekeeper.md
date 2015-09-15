@@ -9,7 +9,7 @@ and delete credentials.
 Gatekeeper has it's own separate test suite built with Minitest. You can run all
 specs from the top level `keyshare` directory with `rake test_gatekeeper`.
 
-*NOTE* You will need to have your `env.yml` credentials set for Gatekeeper tests to run.
+**NOTE** You will need to have your `env.yml` credentials set for Gatekeeper tests to run.
 
 ## AWS Errors
 
