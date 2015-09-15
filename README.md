@@ -43,7 +43,7 @@ TODO: Write testing instructions here
 
 ### Gatekeeper
 
-See the [Gatekeeper docs here](cli/gatekeeper.md) for more info on testing.
+See the [Gatekeeper docs here](cli/README.md) for more info on testing.
 
 ## Development
 
