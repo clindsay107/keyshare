@@ -12,7 +12,7 @@ adding/removing/retrieving credentials stored on S3.
 
 ## Prerequisites
 
-- An AWS account (free tier is more than adequate). Keyshare uses S3 buckets as keyrings to store your encrypted data. You will also
+An AWS account (free tier is more than adequate). Keyshare uses S3 buckets as keyrings to store your encrypted data. You will also
 need your AWS access key ID and secret access key which can be obtained from the [AWS Security Credentials tab](https://console.aws.amazon.com/iam/home?#security_credential)
 
 ## Installation
@@ -43,7 +43,7 @@ TODO: Write testing instructions here
 
 ### Gatekeeper
 
-See the (Gatekeeper docs here)[cli/gatekeeper.md] for more info on testing.
+See the [Gatekeeper docs here](cli/gatekeeper.md) for more info on testing.
 
 ## Development
 
