@@ -1,4 +1,5 @@
 # Keyshare
+[![Build Status](https://travis-ci.org/clindsay107/keyshare.svg?branch=master)](https://travis-ci.org/clindsay107/keyshare)
 
 "It's like LastPass for your Ruby application!"
 
