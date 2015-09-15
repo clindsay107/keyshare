@@ -7,7 +7,7 @@ No longer do you need to store secret keys and tokens in a YAML file to be passe
 encrypts and stores your credentials on Amazon S3, then automatically fetches and injects them into your application. This means
 that the only credentials you need to pass around are your Amazon AWS credentials and your keyshare master password.
 
-Keyshare also includes a command-line toolchain called `gatekeeper`. This gives basic functionality for
+Keyshare also includes a command-line tool called (Gatekeeper)[cli]. This gives basic functionality for
 adding/removing/retrieving credentials stored on S3.
 
 ## Prerequisites
@@ -47,7 +47,8 @@ See the [Gatekeeper docs here](cli/README.md) for more info on testing.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` or `rake test_gatekeeper` to run the tests.
+You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 ## Contributing
 
