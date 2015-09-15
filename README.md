@@ -10,7 +10,7 @@ that the only credentials you need to pass around are your Amazon AWS credential
 Keyshare also includes a command-line toolchain called `gatekeeper`. This gives basic functionality for
 adding/removing/retrieving credentials stored on S3.
 
-## Requirements
+## Prerequisites
 
 - An AWS account (free tier is more than adequate). Keyshare uses S3 buckets as keyrings to store your encrypted data. You will also
 need your AWS access key ID and secret access key which can be obtained from the [AWS Security Credentials tab](https://console.aws.amazon.com/iam/home?#security_credential)
