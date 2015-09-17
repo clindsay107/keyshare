@@ -1,7 +1,6 @@
 require 'thor'
 require 'aws-sdk'
 require 'envyable'
-require 'scrypt'
 Envyable.load('../config/env.yml', 'production')
 
 class Gatekeeper < Thor
@@ -16,7 +15,6 @@ class Gatekeeper < Thor
         return
       end
     end
-    encrypted_cred = encrypt(credential)
     response = client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: encrypted_cred)
     if response.successful?
       puts "INFO: Successfully encrypted and added credential value under '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
@@ -51,17 +49,17 @@ class Gatekeeper < Thor
   private
 
   # Helper method for encrypting plaintext credential using the SCrypt library
-  def encrypt(plaintext)
-    unless plaintext.is_a?(String)
-      begin
-        plaintext = plaintext.to_s
-      rescue NoMethodError
-        raise "Unable to convert value of class #{plaintext.class} to String"
-      end
-    end
-
-    SCrypt::Password.create(plaintext)
-  end
+  # def encrypt(plaintext)
+  #   unless plaintext.is_a?(String)
+  #     begin
+  #       plaintext = plaintext.to_s
+  #     rescue NoMethodError
+  #       raise "Unable to convert value of class #{plaintext.class} to String"
+  #     end
+  #   end
+  #
+  #   cipher = OpenSSL::Cipher.new('aes-256-gcm')
+  # end
 
   # Helper method to check if a key exists
   def key_exists?(bucket_name = ENV['VAULT_BUCKET_NAME'], key)
