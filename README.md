@@ -66,13 +66,21 @@ TODO: Write usage instructions here
 
 ## Testing
 
-### Keyshare
+**NOTE** You will need to have your `env.yml` credentials set for tests to run.
 
-TODO: Write testing instructions here
+You can test core (Keyshare) components with:
 
-### Gatekeeper
+    $ rake test
 
-See the [Gatekeeper docs here](cli/README.md) for more info on testing.
+You can test Gatekeeper with:
+
+    $ rake test_gatekeeper
+
+And you can run both Gatekeeper and Keyshare tests with:
+
+    $ rake test_all
+
+See the [Gatekeeper docs here](cli/README.md) for more info on testing Gatekeeper.
 
 ## Development
 
