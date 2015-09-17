@@ -14,4 +14,9 @@ task :test_gatekeeper do
   ruby "-Ilib:test cli/spec/gatekeeper_spec.rb"
 end
 
+task :test_all do
+  Rake::Task[:test].invoke
+  Rake::Task[:test_gatekeeper].invoke
+end
+
 task :default => :test
