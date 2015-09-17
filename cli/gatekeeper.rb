@@ -15,7 +15,7 @@ class Gatekeeper < Thor
         return
       end
     end
-    response = client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: encrypted_cred)
+    response = client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
     if response.successful?
       puts "INFO: Successfully encrypted and added credential value under '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
     else
