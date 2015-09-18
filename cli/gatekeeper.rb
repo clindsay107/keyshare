@@ -2,7 +2,6 @@ require 'thor'
 require 'aws-sdk'
 require 'envyable'
 require 'openssl'
-require_relative '../lib/keyshare/dse.rb'
 Envyable.load('../config/env.yml', 'production')
 
 class Gatekeeper < Thor
