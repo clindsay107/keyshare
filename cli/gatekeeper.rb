@@ -1,6 +1,8 @@
 require 'thor'
 require 'aws-sdk'
 require 'envyable'
+require 'openssl'
+require_relative '../lib/keyshare/dse.rb'
 Envyable.load('../config/env.yml', 'production')
 
 class Gatekeeper < Thor
@@ -15,7 +17,7 @@ class Gatekeeper < Thor
         return
       end
     end
-    response = client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
+    response = crypto_client.put_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key, body: credential)
     if response.successful?
       puts "INFO: Successfully encrypted and added credential value under '#{key}' to #{ENV['VAULT_BUCKET_NAME']}."
     else
@@ -23,15 +25,16 @@ class Gatekeeper < Thor
     end
   end
 
-  desc "get KEY BUCKET_NAME", "Retrieve a credential under a specified key from the vault"
-  option :decrypt, :type => :string
+  desc "get KEY", "Retrieve a credential under a specified key from the vault"
+  option :decrypt, :type => :boolean
   def get(key)
-    response = client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
     if options[:decrypt]
+      response = crypto_client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
       puts "INFO: Retrieved and decrypted value:\n\n\t#{response}\n\n"
     else
-      puts "INFO: Retrieved (encrypted) value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
-      " You can call this method again with the '--decrypt \"YOUR KEY\"' to view the decrypted value."
+      response = client.get_object(bucket: ENV['VAULT_BUCKET_NAME'], key: key).body.read
+      puts "INFO: Retrieved encrypted value:\n\n\t#{response}\n\nHowever, no decrypt flag was specified."\
+      " You can call this method again with the '--decrypt' flag to view the decrypted value."
     end
   end
 
@@ -48,19 +51,6 @@ class Gatekeeper < Thor
 
   private
 
-  # Helper method for encrypting plaintext credential using the SCrypt library
-  # def encrypt(plaintext)
-  #   unless plaintext.is_a?(String)
-  #     begin
-  #       plaintext = plaintext.to_s
-  #     rescue NoMethodError
-  #       raise "Unable to convert value of class #{plaintext.class} to String"
-  #     end
-  #   end
-  #
-  #   cipher = OpenSSL::Cipher.new('aes-256-gcm')
-  # end
-
   # Helper method to check if a key exists
   def key_exists?(bucket_name = ENV['VAULT_BUCKET_NAME'], key)
     begin
@@ -71,6 +61,12 @@ class Gatekeeper < Thor
   end
 
   # Build a new AWS S3 client using supplied credentials in env.yml
+  def crypto_client
+    credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+    master_key = OpenSSL::Digest::SHA256.digest(ENV['KEYSHARE_MASTER_KEY'])
+    Aws::S3::Encryption::Client.new(region: ENV['AWS_REGION'], credentials: credentials, encryption_key: master_key)
+  end
+
   def client
     credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
     Aws::S3::Client.new(region: ENV['AWS_REGION'], credentials: credentials)

@@ -65,10 +65,16 @@ describe "Gatekeeper" do
     assert_raises(Aws::S3::Errors::NoSuchKey) { Gatekeeper.start(command) }
   end
 
-  it "should be able to get an existing key" do
+  it "should be able to get an existing key without decrypting" do
     command = "get #{TEST_KEY_1}"
     output = get_output(command)
-    output.must_match /^INFO: Retrieved \(encrypted\) value/
+    output.must_match /^INFO: Retrieved encrypted value/
+  end
+
+  it "should be able to get and decrypt a key" do
+    command = "get #{TEST_KEY_1} --decrypt"
+    output = get_output(command)
+    output.must_match /^INFO: Retrieved and decrypted value/
   end
 
   private
@@ -76,7 +82,7 @@ describe "Gatekeeper" do
   # Helper method to capture the output from an array of command line args
   def get_output(command)
     command = command.split
-    capture_io { Gatekeeper.start(command) }.join
+    capture_io { Gatekeeper.start(command) }.join.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
   end
 
 end

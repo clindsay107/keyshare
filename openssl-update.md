@@ -4,6 +4,8 @@ If you are on OSX, you can check your openSSL version with the following:
 
     $ openssl version
 
+For Keyshare and Gatekeeper to work, you will need version 1.0.2d **or** 1.0.1p.
+
 If you have a version less than what was specified above, you can upgrade through homebrew like so:
 
     $ brew update
