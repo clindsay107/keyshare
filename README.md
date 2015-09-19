@@ -6,7 +6,7 @@
 A Ruby gem to securely share and manage credentials used for various services, API calls and webhooks in your Ruby application.
 No longer do you need to store secret keys and tokens in a YAML file to be passed around offline to every project member. Keyshare
 encrypts and stores your credentials on Amazon S3, then automatically fetches and injects them into your application. This means
-that the only credentials you need to pass around are your Amazon AWS credentials and your keyshare master password.
+that the only credentials you need to pass around are your Amazon AWS credentials and your keyshare master password.It uses AWS client side encryption, so nothing is ever sent over the wire in plaintext.
 
 Keyshare also includes a command-line tool called [Gatekeeper](cli). This gives basic functionality for
 adding/removing/retrieving credentials stored on S3.
