@@ -19,9 +19,12 @@ task :test_all do
   Rake::Task[:test_gatekeeper].invoke
 end
 
-task :install do
-  require 'keyshare/cli/install'
-  Keyshare::Install.start
+namespace :keyshare do
+  desc "Create a keyshare.yml file (or copy from an existing source)"
+  task :install, [:destination, :source] do |_, args|
+    require 'keyshare/cli/install'
+    Keyshare::Install.start([:destination, :source])
+  end
 end
 
 task :default => :test
