@@ -19,9 +19,10 @@ module Keyshare
       end
 
       def copy
-        if options[:source]
+        if !options[:source].empty?
           copy_file(File.expand_path(options[:source]), File.expand_path(options[:destination]))
         else
+          puts "Create file at #{File.expand_path(options[:destination])}"
           copy_file("default.yml", File.expand_path(options[:destination]))
         end
       end
