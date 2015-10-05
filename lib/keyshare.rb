@@ -1,5 +1,13 @@
-require "keyshare/version"
+require 'keyshare/version'
 
 module Keyshare
-  # Your code goes here...
+
+
+  private
+
+  def parse_yaml(filepath)
+    # parse yaml file =>
+  end
+
+
 end

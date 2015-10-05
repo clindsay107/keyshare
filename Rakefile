@@ -1,8 +1,9 @@
-require "bundler/gem_tasks"
-require "rake/testtask"
-require "envyable"
+require 'bundler/gem_tasks'
+require 'rake/testtask'
+require 'keyshare/cli/install'
+# require "envyable"
 
-Envyable.load('./config/env.yml', 'test')
+# Envyable.load('./config/env.yml', 'test')
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
@@ -17,6 +18,10 @@ end
 task :test_all do
   Rake::Task[:test].invoke
   Rake::Task[:test_gatekeeper].invoke
+end
+
+task :install do
+  Keyshare::ClI.start
 end
 
 task :default => :test

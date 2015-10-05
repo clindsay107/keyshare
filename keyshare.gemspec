@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["clindsay107"]
   spec.email         = ["clindsay107@gmail.com"]
 
-  spec.summary       = "Easily & securely share credentials with your dev team."
+  spec.summary       = "Easily & securely share environment secrets with your dev team."
   spec.homepage      = "https://github.com/clindsay107/keyshare"
   spec.license       = "GPL"
 
@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "thor"
   spec.add_runtime_dependency "aws-sdk"
-  spec.add_runtime_dependency "envyable"
+  # spec.add_runtime_dependency "envyable"
 end

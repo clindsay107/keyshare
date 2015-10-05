@@ -1,0 +1,16 @@
+# Add your secrets, API keys, credentials, etc here in standard YAML format.
+# Below is just an example of how this file should look.
+#
+# Values below are not namespaced, so top level values apply to all environments
+#
+# AWS_SECRET_ACCESS_KEY = KJH923nJKfe90hNnj
+# AWS_REGION: us-west-2
+# twilio_account_sid: AC88449247f9b1fr2bda57q15313oi3e9m
+#
+# Value below are namespaced to `production` environments and will override the top level
+# vaules if the app is started in the `production` environment
+#
+# production:
+#   AWS_SECRET_ACCESS_KEY = KE93242NEewfjk42xr2tnO9gHI03
+#   AWS_REGION: us-east-1
+#   twilio_account_sid: OI3255Njnfw8923hjbYGuy62njk80cEEr1
