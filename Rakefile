@@ -1,6 +1,5 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
-require 'keyshare/cli/install'
 # require "envyable"
 
 # Envyable.load('./config/env.yml', 'test')
@@ -21,7 +20,8 @@ task :test_all do
 end
 
 task :install do
-  Keyshare::ClI.start
+  require 'keyshare/cli/install'
+  Keyshare::Install.start
 end
 
 task :default => :test

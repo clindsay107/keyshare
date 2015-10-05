@@ -1,7 +1,6 @@
 require 'thor/group'
 
 module Keyshare
-  class CLI < Thor
     class Install < Thor::Group
       include Thor::Actions
 
@@ -9,6 +8,10 @@ module Keyshare
       aliases: ["-p"],
       default: "config/keyshare.yml",
       desc: "Specify a path for your keyshare.yml file to be created"
+
+      def self.source_root
+        File.expand_path("../install", __FILE__)
+      end
 
       def copy_base_yml
         puts "Called!"
@@ -30,5 +33,4 @@ module Keyshare
       #   end
       # end
     end
-  end
 end
