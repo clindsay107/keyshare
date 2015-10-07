@@ -21,6 +21,8 @@ module Keyshare
       if @yml
         @yml.clear
       end
+
+      @loadable.clear
     end
 
     private

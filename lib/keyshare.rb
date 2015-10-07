@@ -10,22 +10,26 @@ module Keyshare
     Loader.new(path).load(env)
   end
 
-  # Retrieve the latest `keyshare.yml` file from S3
+  # Retrieve and decrypt the latest `secrets.yml` file from S3
   def self.refresh
     # response = client.get_object(bucket: bucket, key: key).body.read
   end
 
+  # Encrypt and upload `secrets.yml` to S3
+  def self.upload(path = '')
+    raise "You must specify a path to your keyshare.yml file" if path.empty?
+
+    loader = Loader.new(path).load('keyshare')
+
+    loader.unload
+  end
+
   private
 
-  def client
-    loader = Loader.new(path)
-    loader.load('keyshare')
-
+  def client(credentials_path)
     credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
     master_key = OpenSSL::Digest::SHA256.digest(ENV['KEYSHARE_MASTER_KEY'])
     Aws::S3::Encryption::Client.new(region: ENV['AWS_REGION'], credentials: credentials, encryption_key: master_key)
-
-    loader.unload
   end
 
 end
