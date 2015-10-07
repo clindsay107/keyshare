@@ -29,7 +29,7 @@ namespace :keyshare do
   end
 
   desc "Retrieve the latest env.yml from S3"
-  task :refresh
+  task :refresh do
     require 'keyshare'
     Keyshare.refresh
   end
