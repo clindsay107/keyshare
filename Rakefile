@@ -18,7 +18,7 @@ end
 
 namespace :keyshare do
 
-  desc "Create a keyshare.yml file (or copy from an existing source)"
+  desc "Create a env.yml file (or copy from an existing source)"
   task :install, :destination, :source do |t, args|
     require 'keyshare/cli/install'
 
@@ -28,10 +28,9 @@ namespace :keyshare do
     Keyshare::Install.start(["-d=#{dest}", "-s=#{source}"])
   end
 
-  desc "Retrieve the latest keyshare.yml from S3"
+  desc "Retrieve the latest env.yml from S3"
   task :refresh
     require 'keyshare'
-    
     Keyshare.refresh
   end
 

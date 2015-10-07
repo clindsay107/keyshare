@@ -4,7 +4,7 @@ module Keyshare
 
     # `loadable` can be anything that is a hash structure, default to ENV container
     def initialize(path, loadable = ENV)
-      @path = path
+      @path = File.expand_path(path)
       @loadable = loadable
     end
 
@@ -20,8 +20,7 @@ module Keyshare
     private
 
     def load_yml
-      path = File.expand_path(@path)
-      File.exist?(path) ? YAML.load_file(path) : raise "No YAML file found at #{path}"
+      File.exist?(@path) ? YAML.load_file(@path) : raise "No YAML file found at #{@path}"
     end
 
     def set_value(k, v)
