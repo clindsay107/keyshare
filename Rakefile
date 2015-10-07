@@ -17,6 +17,7 @@ end
 # end
 
 namespace :keyshare do
+
   desc "Create a keyshare.yml file (or copy from an existing source)"
   task :install, :destination, :source do |t, args|
     require 'keyshare/cli/install'
@@ -24,10 +25,16 @@ namespace :keyshare do
     dest    = args[:destination]
     source  = args[:source]
 
-    puts "Given #{dest} and #{source}"
-
     Keyshare::Install.start(["-d=#{dest}", "-s=#{source}"])
   end
+
+  desc "Retrieve the latest keyshare.yml from S3"
+  task :refresh
+    require 'keyshare'
+    
+    Keyshare.refresh
+  end
+
 end
 
 task :default => :test

@@ -9,4 +9,4 @@
 /tmp/
 config/env.yml
 config/keyshare.yml
-/.gem
+/*.gem/
