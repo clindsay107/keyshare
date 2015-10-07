@@ -17,10 +17,16 @@ module Keyshare
       end
     end
 
+    def unload
+      if @yml
+        @yml.clear
+      end
+    end
+
     private
 
     def load_yml
-      File.exist?(@path) ? YAML.load_file(@path) : raise "No YAML file found at #{@path}"
+      File.exist?(@path) ? YAML.load_file(@path) : raise "No *.yml file found at #{@path}"
     end
 
     def set_value(k, v)

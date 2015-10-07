@@ -3,13 +3,13 @@ require 'thor/group'
 module Keyshare
     class Install < Thor::Group
       include Thor::Actions
-      
+
       # rake install
 
       class_option :destination,
       aliases: ["-d", "--destination"],
-      default: "config/env.yml",
-      desc: "Specify a destination path for your env.yml file to be created"
+      default: "config/secrets.yml",
+      desc: "Specify a destination path for your secrets.yml file to be created"
 
       class_option :source,
       aliases: ["-s", "--source"],
@@ -20,24 +20,23 @@ module Keyshare
       end
 
       def copy
-        already_exists! if File.exist?(source[:destination])
-
-        if !options[:source].empty?
+        if options[:source]
+          already_exists! if File.exist?(source[:destination])
           copy_file(File.expand_path(options[:source]), File.expand_path(options[:destination]))
         else
-          say("Created file #{File.expand_path(options[:destination])}", :green)
+          say("Created file #{File.expand_path(options[:destination])}")
           copy_file("default.yml", File.expand_path(options[:destination]))
         end
       end
 
       def add_to_ignore
-        say("\nPlease add #{options[:path]} to your project .gitignore file now to avoid committing secrets to version control!", [:red, :bold], true)
+        say("\nPlease add #{options[:destination]} to your project .gitignore file now to avoid committing secrets to version control!", [:red, :bold], true)
       end
 
       private
 
       def already_exists!(destination)
-        raise "An env.yml file already exists at #{destination}! Please backup and (re)move this file before re-running the rake task."
+        raise "A secrets.yml file already exists at #{destination}! Please backup and (re)move this file before re-running the rake task."
       end
 
     end
