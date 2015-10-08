@@ -1,0 +1,10 @@
+# This file should ONLY include your AWS credentials and encryption master key
+# This file should only be kept on your local machine and should NEVER be checked into source control!
+#
+# An example configuration is below
+#
+# AWS_ACCESS_KEY_ID: 1234567890asdfghjkl
+# AWS_SECRET_ACCESS_KEY: 0987654321poiuytrewq
+# AWS_REGION: us-west-2
+# KEYSHARE_MASTER_KEY: p4ssw0rd
+#

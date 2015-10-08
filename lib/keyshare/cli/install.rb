@@ -8,29 +8,27 @@ module Keyshare
 
       class_option :destination,
       aliases: ["-d", "--destination"],
-      default: "config/secrets.yml",
-      desc: "Specify a destination path for your secrets.yml file to be created"
+      required: true,
+      desc: "Specify a destination path for secrets.yml and keyshare.yml"
 
       class_option :source,
       aliases: ["-s", "--source"],
-      desc: "Specify an optional, existing YAML secrets file to be copied to env.yml"
+      default: "install/secrets.yml"
+      desc: "Specify an optional, existing YAML secrets file to be copied to secrets.yml"
 
       def self.source_root
         File.expand_path("../install", __FILE__)
       end
 
       def copy
-        if options[:source]
-          already_exists! if File.exist?(source[:destination])
-          copy_file(File.expand_path(options[:source]), File.expand_path(options[:destination]))
-        else
-          say("Created file #{File.expand_path(options[:destination])}")
-          copy_file("default.yml", File.expand_path(options[:destination]))
-        end
+        raise "Must provide destination directory!" if !options[:destination]
+
+        copy_file(File.expand_path(options[:source]), File.expand_path(options[:destination]))
+        copy_file(File.expand_path("install/keyshare.yml"), File.expand_path(options[:destination]))
       end
 
       def add_to_ignore
-        say("\nPlease add #{options[:destination]} to your project .gitignore file now to avoid committing secrets to version control!", [:red, :bold], true)
+        say("\nPlease add keyshare.yml and secrets.yml to your project .gitignore file now to avoid committing secrets to version control!", [:red, :bold], true)
       end
 
       private
