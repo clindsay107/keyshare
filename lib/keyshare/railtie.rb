@@ -1,7 +1,7 @@
 module Keyshare
   class Railtie < Rails::Railtie
     rake_tasks do
-      load("../../Rakefile")
+      load("tasks/keyshare.rake")
     end
 
     config.before_configuration do
