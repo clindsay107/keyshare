@@ -1,0 +1,13 @@
+dog: barkley
+cat: charles
+bird: rohan
+
+production:
+  dog: buddy
+  cat: cake
+  bird: chirpy
+
+staging:
+  dog: spot
+  cat: hermes
+  bird: charles
