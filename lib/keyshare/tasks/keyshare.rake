@@ -6,8 +6,10 @@ namespace :keyshare do
   task :install, :destination do |t, args|
     require 'keyshare/cli/install'
 
+    command = []
+    
     if args[:destination]
-      command = ["-d=#{args[:destination]}"]
+      command << ["-d=#{args[:destination]}"]
     end
 
     Keyshare::Install.start(command)
