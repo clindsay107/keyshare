@@ -3,12 +3,12 @@ require 'keyshare'
 namespace :keyshare do
 
   desc "Create a secrets.yml file (or copy from an existing source)"
-  task :install, :destination, :source do |t, args|
+  task :install, :destination do |t, args|
     require 'keyshare/cli/install'
 
-    command = []
-    command << "-d=#{args[:destination]}" if args[:destination]
-    command << "-s=#{args[:source]}" if args[:source]
+    if args[:destination]
+      command = ["-d=#{args[:destination]}"]
+    end
 
     Keyshare::Install.start(command)
   end

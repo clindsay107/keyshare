@@ -7,14 +7,9 @@ module Keyshare
       # rake install
 
       class_option :destination,
+      desc: "Destination directory for secrets.yml and keyshare.yml",
       aliases: ["-d", "--destination"],
-      required: true,
-      desc: "Specify a destination path for secrets.yml and keyshare.yml"
-
-      class_option :source,
-      aliases: ["-s", "--source"],
-      default: "install/example.secrets.yml"
-      desc: "Specify an optional, existing YAML secrets file to be copied to secrets.yml"
+      required: true
 
       def self.source_root
         File.expand_path("../install", __FILE__)
@@ -23,8 +18,8 @@ module Keyshare
       def copy
         raise "Must provide destination directory!" if !options[:destination]
 
-        copy_file(File.expand_path(options[:source]), File.expand_path(options[:destination]))
-        copy_file(File.expand_path("install/example.keyshare.yml"), File.expand_path(options[:destination]))
+        copy_file("example.secrets.yml", "#{options[:destination]}/example.secrets.yml")
+        copy_file("example.keyshare.yml", "#{options[:destination]}/example.keyshare.yml")
       end
 
       def add_to_ignore
