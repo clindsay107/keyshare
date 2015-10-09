@@ -5,31 +5,63 @@ require 'keyshare/railtie' if defined?(Rails)
 
 module Keyshare
 
+  BUCKET_NAME = 'keyshare-vault'
+
   # Load a `secrets.yml` file into ENV
   def self.load(path, env = 'development')
     Loader.new(path).load(env)
   end
 
   # Retrieve and decrypt the latest `secrets.yml` file from S3
-  def self.refresh
-    # response = client.get_object(bucket: bucket, key: key).body.read
+  def self.get(path = '')
+    raise "You must specify a path to your secrets.yml file" if path.empty?
+    client = build_client
+    response = client.get_object(bucket: BUCKET_NAME, key: 'secrets.yml').body.read
   end
 
   # Encrypt and upload `secrets.yml` to S3
   def self.upload(path = '')
-    raise "You must specify a path to your keyshare.yml file" if path.empty?
+    raise "You must specify a path to your secrets.yml file" if path.empty?
 
-    loader = Loader.new(path).load('keyshare')
+    loader  = Loader.new(path, {}).load('keyshare')
+    payload = File.open(path)
+    client  = build_client(loader.loadable)
+
+    if object_exists?('keyshare.yml', client.client)
+      backup('keyshare.yml', client.client)
+    end
+
+    client.put_object(bucket: BUCKET_NAME, key: 'secrets.yml', body: payload)
 
     loader.unload
   end
 
   private
 
-  def client(credentials_path)
-    credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
-    master_key = OpenSSL::Digest::SHA256.digest(ENV['KEYSHARE_MASTER_KEY'])
-    Aws::S3::Encryption::Client.new(region: ENV['AWS_REGION'], credentials: credentials, encryption_key: master_key)
+  # TODO we dont know if this works yet...
+  def build_client(loadable = ENV)
+    credentials = Aws::Credentials.new(loadable['AWS_ACCESS_KEY_ID'], loadable['AWS_SECRET_ACCESS_KEY'])
+    master_key = OpenSSL::Digest::SHA256.digest(loadable['KEYSHARE_MASTER_KEY'])
+    Aws::S3::Encryption::Client.new(credentials: credentials, encryption_key: master_key)
+  end
+
+  # Check (but do not retrieve) an object on S3
+  def object_exists?(key, client)
+    client.head_object({
+      bucket: BUCKET_NAME,
+      key: key
+    }).successful?
+  end
+
+  # Rotate old secrets.yml
+  def backup(key, client)
+    new_key_name = "#{key}-#{Time.now.to_i}"
+
+    client.copy_object({
+      bucket: BUCKET_NAME,
+      copy_source: key,
+      key: new_key_name
+    })
   end
 
 end
