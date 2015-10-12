@@ -4,11 +4,13 @@ require 'keyshare/loader'
 require 'keyshare/railtie' if defined?(Rails)
 
 module Keyshare
-
+  
+  VERSION = '0.1.0'
   BUCKET_NAME = 'keyshare-vault'
 
-  # Load a `secrets.yml` file into ENV
+  # Load a YAML file into ENV
   def self.load(path, env = 'development')
+    raise "You must specify a path to your secrets.yml file" if path.empty?
     Loader.new(path).load(env)
   end
 
