@@ -35,6 +35,10 @@ describe Keyshare do
       Keyshare.load('spec/resources/test.yml', 'production')
       ENV['dog'].must_match('buddy')
     end
+
+    it "should raise an error if the no path is supplied" do
+      -> { Keyshare.load() }.must_raise("You must specify a path to your secrets.yml file")
+    end
   end
 
   # describe "get" do
