@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'aws-sdk'
+require 'openssl'
 
 describe Keyshare do
 
@@ -12,28 +13,43 @@ describe Keyshare do
     @setup = true
   end
 
+  describe "helper instance methods" do
+
+    it "should keep helper methods private" do
+      [:build_client, :object_exists?, :backup].each do |method|
+        assert(Keyshare.private_method_defined?(method))
+      end
+    end
+  end
+
+  describe "client" do
+
+    # it "should be able to build a client from ENV variables" do
+    #   Class.new.extend(Keyshare).send(:build_client)
+    # end
+  end
+
   describe "load" do
 
     it "should be able to load a YAML file" do
-        Keyshare.load('spec/resources/test.yml', 'production')
-        ENV['dog'].must_match('buddy')
-    end
-
-    it "should raise an error if no path is supplied" do
-      -> { Keyshare.load }.must_raise("You must specify a path to your secrets.yml file")
+      Keyshare.load('spec/resources/test.yml', 'production')
+      ENV['dog'].must_match('buddy')
     end
   end
 
-  describe "get" do
-    before do
-      credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
-      client = Aws::S3::Encryption::Client.new(credentials: credentials, encryption_key: master_key)
-    end
-
-    it "should raise an error if no path is supplied" do
-      -> { Keyshare.get }.must_raise("You must specify a path to your secrets.yml file")
-    end
-  end
+  # describe "get" do
+  #   before do
+  #     Keyshare.load('spec/resources/secrets.yml')
+  #     credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+  #     key = OpenSSL::Digest::SHA256.digest('p4ssw0rd')
+  #     client = Aws::S3::Encryption::Client.new(region: ENV['AWS_REGION'], credentials: credentials, encryption_key: key)
+  #     client.put_object(bucket: @test_bucket, key: 'test-key', body: File.open('spec/resources/test.yml'))
+  #   end
+  #
+  #   it "should be able to retrieve and decrypt fom S3" do
+  #     p Keyshare.get('spec/resources/secrets.yml')
+  #   end
+  # end
 
   private
 

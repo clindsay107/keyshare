@@ -1,3 +1,5 @@
+# A .yml with bogus values, mainly for testing the Loader class
+
 dog: barkley
 cat: charles
 bird: rohan

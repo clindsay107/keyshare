@@ -9,4 +9,5 @@
 /tmp/
 config/env.yml
 config/keyshare.yml
+spec/resources/secrets.yml
 *.gem

@@ -1,10 +1,10 @@
 require 'yaml'
-require 'keyshare/version'
+require 'openssl'
 require 'keyshare/loader'
 require 'keyshare/railtie' if defined?(Rails)
 
 module Keyshare
-  
+
   VERSION = '0.1.0'
   BUCKET_NAME = 'keyshare-vault'
 
@@ -15,16 +15,13 @@ module Keyshare
   end
 
   # Retrieve and decrypt the latest `secrets.yml` file from S3
-  def self.get(path = '')
-    raise "You must specify a path to your secrets.yml file" if path.empty?
+  def self.get
     client = build_client
     response = client.get_object(bucket: BUCKET_NAME, key: 'secrets.yml').body.read
   end
 
   # Encrypt and upload `secrets.yml` to S3
-  def self.upload(path = '')
-    raise "You must specify a path to your secrets.yml file" if path.empty?
-
+  def self.upload
     loader  = Loader.new(path, {}).load('keyshare')
     payload = File.open(path)
     client  = build_client(loader.loadable)
@@ -40,7 +37,6 @@ module Keyshare
 
   private
 
-  # TODO we dont know if this works yet...
   def build_client(loadable = ENV)
     credentials = Aws::Credentials.new(loadable['AWS_ACCESS_KEY_ID'], loadable['AWS_SECRET_ACCESS_KEY'])
     master_key = OpenSSL::Digest::SHA256.digest(loadable['KEYSHARE_MASTER_KEY'])
